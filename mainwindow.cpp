@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // 设置窗口最小宽度，保证表格内容不拥挤
+    this->resize(550, 450);
     // 初始化并连接数据库
     if (DatabaseManager::instance().openDb()) {
 
@@ -31,21 +33,34 @@ MainWindow::MainWindow(QWidget *parent)
     // 将模型绑定到界面上的 TableView
     ui->tableView->setModel(m_model);
 
-    // === 3. 美化表格显示 ===
+    // === 3. 美化表格显示 (紧凑布局版) ===
 
-    // 隐藏 ID 列（用户不需要看这个）
+    // 隐藏 ID 列
     ui->tableView->hideColumn(0);
 
-    // 让列宽自动铺满窗口
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // 获取表头
+    QHeaderView *header = ui->tableView->horizontalHeader();
 
-    // 设置整行选中（点一个格子选中一整行）
+    // 1. 时间列：固定宽度，刚好放下 "2025-12-30 16:00:00"
+    header->setSectionResizeMode(1, QHeaderView::Fixed);
+    ui->tableView->setColumnWidth(1, 150);
+
+    // 2. 数据列（温度、湿度、光照）：给个小宽度，紧凑一点
+    header->setSectionResizeMode(2, QHeaderView::Fixed);
+    ui->tableView->setColumnWidth(2, 80); // 温度
+
+    header->setSectionResizeMode(3, QHeaderView::Fixed);
+    ui->tableView->setColumnWidth(3, 80); // 湿度
+
+    header->setSectionResizeMode(4, QHeaderView::Fixed);
+    ui->tableView->setColumnWidth(4, 80); // 光照
+
+    // 3. 状态列：自动拉伸，吃掉剩下的所有空间
+    header->setSectionResizeMode(5, QHeaderView::Stretch);
+
+    // 保持之前的设置
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    // 禁止编辑（只读模式）
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    // 隔行变色（更好看）
     ui->tableView->setAlternatingRowColors(true);
 }
 

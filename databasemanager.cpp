@@ -64,7 +64,8 @@ bool DatabaseManager::insertData(double temp, double humi, int light, const QStr
                   "VALUES (:time, :temp, :humi, :light, :status)");
 
     // 绑定数据 (使用当前时间)
-    query.bindValue(":time", QDateTime::currentDateTime());
+    // 存入格式化后的字符串，去掉 "T"
+    query.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
     query.bindValue(":temp", temp);
     query.bindValue(":humi", humi);
     query.bindValue(":light", light);
