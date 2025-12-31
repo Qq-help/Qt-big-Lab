@@ -60,16 +60,16 @@ int main(int argc, char *argv[])
             background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #66bb3f, stop:1 #b8f073);
         }
 
-        /* 按钮按下时：变深，模拟按压 */
+/* 按钮按下时：变为深绿色，模拟按压感 */
         QPushButton:pressed {
-            background-color: #3e8e41;
-            padding-top: 10px; /* 文字下沉 */
+            background-color: #2e7d32; /* 深森林绿 */
+            padding-top: 10px;         /* 文字下沉 */
         }
 
-        /* 按钮被选中（开启）时的状态：变成醒目的橙红色（警示/工作状态） */
+        /* 按钮被选中（开启）时的状态：保持深绿色，边框加深 */
         QPushButton:checked {
-            background-color: #ff7e5f;
-            border: 2px solid #feb47b;
+            background-color: #2e7d32; /* 保持深绿色 */
+            border: 2px solid #1b5e20; /* 墨绿色边框，增加立体感 */
         }
 
         /* 表格样式 */
