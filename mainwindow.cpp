@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnFan->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
     ui->btnFan->setIconSize(QSize(24, 24));
 
-    this->resize(900, 600); // 稍微调大一点窗口以便观察
+    this->resize(600, 550); // 稍微调大一点窗口以便观察
 
     // 2. 数据库与模型初始化 (保持原有代码)
     if (DatabaseManager::instance().openDb()) {
@@ -133,36 +133,17 @@ void MainWindow::on_btnClear_clicked()
     }
 }
 
-// --- 新增：浇水按钮逻辑 ---
 void MainWindow::on_btnWater_toggled(bool checked)
 {
-    // 1. 通知后台线程改变状态
+    // 1. 通知后台线程
     m_worker->setWateringStatus(checked);
 
-    // 2. 更新按钮 UI 反馈
-    if (checked) {
-        ui->btnWater->setText("停止浇水");
-        // 变成深色或红色警示
-        ui->btnWater->setStyleSheet("background-color: #e74c3c; color: white; border-radius: 15px; padding: 8px;");
-    } else {
-        ui->btnWater->setText("开启浇水");
-        // 恢复绿色渐变 (这里简单写，或者设为空字符串恢复默认 qss)
-        ui->btnWater->setStyleSheet("");
-    }
+    // 2. 仅更新文字，不要 setStyleSheet
+    ui->btnWater->setText(checked ? "停止浇水" : "开启浇水");
 }
 
-// --- 新增：通风按钮逻辑 ---
 void MainWindow::on_btnFan_toggled(bool checked)
 {
-    // 1. 通知后台线程
     m_worker->setFanStatus(checked);
-
-    // 2. 更新按钮 UI
-    if (checked) {
-        ui->btnFan->setText("关闭通风");
-        ui->btnFan->setStyleSheet("background-color: #e67e22; color: white; border-radius: 15px; padding: 8px;");
-    } else {
-        ui->btnFan->setText("开启通风");
-        ui->btnFan->setStyleSheet("");
-    }
+    ui->btnFan->setText(checked ? "关闭通风" : "开启通风");
 }

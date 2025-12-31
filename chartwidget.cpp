@@ -1,7 +1,6 @@
 #include "chartwidget.h"
 #include <QPainter>
 #include <QPen>
-
 ChartWidget::ChartWidget(QWidget *parent)
     : QWidget{parent}
 {
@@ -11,26 +10,22 @@ ChartWidget::ChartWidget(QWidget *parent)
     setAutoFillBackground(true);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
-
 void ChartWidget::addData(double temp, double hum)
 {
     // 1. 存温度
     m_tempData.append(temp);
     if (m_tempData.size() > MAX_POINTS) m_tempData.removeFirst();
-
-    // 2. 存湿度
+ // 2. 存湿度
     m_humData.append(hum);
     if (m_humData.size() > MAX_POINTS) m_humData.removeFirst();
 
     update();
 }
-
 void ChartWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-
     int w = width();
     int h = height();
     if (w <= 0 || h <= 0) return;

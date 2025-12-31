@@ -43,34 +43,30 @@ int main(int argc, char *argv[])
             background-color: white; /* 标题背景遮挡边框 */
         }
 
-/* 按钮样式：清新农场绿 (渐变) */
-        QPushButton {
-            /* 从深绿到嫩绿的渐变 */
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #56ab2f, stop:1 #a8e063);
-            border: none;
-            border-radius: 15px; /* 圆角 */
-            color: white;
-            font-weight: bold;
-            padding: 8px 16px;
-            min-width: 80px;
-        }
+/* --- 按钮基础样式 --- */
+QPushButton {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #56ab2f, stop:1 #a8e063);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    min-width: 80px;
+}
 
-        /* 按钮鼠标悬停时 (可选，增加互动感) */
-        QPushButton:hover {
-            background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #66bb3f, stop:1 #b8f073);
-        }
+/* 鼠标悬停：稍微变亮一点 */
+QPushButton:hover {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #66bb3f, stop:1 #b8f073);
+}
 
-/* 按钮按下时：变为深绿色，模拟按压感 */
-        QPushButton:pressed {
-            background-color: #2e7d32; /* 深森林绿 */
-            padding-top: 10px;         /* 文字下沉 */
-        }
-
-        /* 按钮被选中（开启）时的状态：保持深绿色，边框加深 */
-        QPushButton:checked {
-            background-color: #2e7d32; /* 保持深绿色 */
-            border: 2px solid #1b5e20; /* 墨绿色边框，增加立体感 */
-        }
+/* --- 关键修改：按下 (pressed) 和 选中状态 (checked) 保持一致 --- */
+/* 我们使用更重的绿色：#388E3C 是标准的深绿色 */
+QPushButton:pressed, QPushButton:checked {
+    background-color: #388E3C;
+    /* 如果想要更明显的按压感，可以保留这个下沉效果 */
+    padding-top: 10px;
+    border: 2px solid #2E7D32; /* 边框再深一点 */
+}
 
         /* 表格样式 */
         QTableView {
@@ -91,21 +87,21 @@ int main(int argc, char *argv[])
 
         /* 城市名称：使用低调的灰色 */
         QLabel#lblCity {
-            color: #7f8c8d;
-            font-size: 13px;
+            color: black;
+            font-size: 16px;
             font-weight: normal;
         }
 
         /* 天气状况（如晴/雨）：使用你按钮同款的深绿色 */
         QLabel#lblWeatherDesc {
-            color: #56ab2f;
+            color: black;
             font-size: 15px;
             font-weight: bold;
         }
 
         /* 室外气温：使用橙色，与室内蓝色的区分开 */
         QLabel#lblWeatherTemp {
-            color: #e67e22;
+            color: black;
             font-size: 18px;
             font-weight: bold;
             font-family: "Arial";
