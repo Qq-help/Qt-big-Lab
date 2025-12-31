@@ -10,6 +10,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // 设置窗口最小宽度，保证表格内容不拥挤
+    // --- Day 8 UI 美化：添加图标 ---
+    // 使用 Qt 内置的“标准图标” (SP_...)，这样不用找图片也能有图标
+
+    // 给“开启浇水”按钮加个“水滴/确认”图标
+    ui->btnWater->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
+    ui->btnWater->setIconSize(QSize(24, 24)); // 图标大一点
+
+    // 给“开启通风”按钮加个“风扇/箭头”图标
+    ui->btnFan->setIcon(style()->standardIcon(QStyle::SP_ArrowUp));
+    ui->btnFan->setIconSize(QSize(24, 24));
     this->resize(550, 450);
     // 初始化并连接数据库
     if (DatabaseManager::instance().openDb()) {
