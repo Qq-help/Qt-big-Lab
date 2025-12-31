@@ -76,10 +76,19 @@ MainWindow::MainWindow(QWidget *parent)
     m_worker->start();
 
     // --- Day 5 新增代码结束 ---
-    // --- Day 6 测试代码 ---
+    // --- Day 6 网络天气功能 ---
     m_weather = new WeatherManager(this);
-    m_weather->fetchWeather("北京"); // 参数暂时没用到，先随便传
-    // --------------------
+
+    // 连接信号：当获取到天气时，更新 UI
+    connect(m_weather, &WeatherManager::weatherUpdated, this, [=](double temp, QString desc){
+        // 更新界面显示
+        ui->lblCity->setText("北京市"); // 固定显示中文名
+        ui->lblWeatherDesc->setText(desc); // 显示中文天气（如“晴”）
+        ui->lblWeatherTemp->setText(QString::number(temp) + " °C");
+    });
+
+    // 启动时立即请求一次
+    m_weather->fetchWeather("Beijing");
 }
 
 MainWindow::~MainWindow()
