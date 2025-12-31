@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include "workerthread.h"
 #include "weathermanager.h"
+#include "chartwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,6 +29,7 @@ private:
     QSqlTableModel *m_model;
     WorkerThread *m_worker;
     WeatherManager *m_weather;
+    ChartWidget *m_chart;
 
 };
 #endif // MAINWINDOW_H

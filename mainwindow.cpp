@@ -89,6 +89,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 启动时立即请求一次
     m_weather->fetchWeather("Beijing");
+
+    // --- Day 7 自定义图表 ---
+    m_chart = new ChartWidget(this);
+    // 将自定义图表添加到 UI 中预留的布局里 (chartLayout)
+    ui->chartLayout->addWidget(m_chart);
 }
 
 MainWindow::~MainWindow()
@@ -119,5 +124,8 @@ void MainWindow::updateSensorData(double temp, double hum, int light, QString st
 
         // 4. 自动滚动到最后一行，方便查看最新状态
         ui->tableView->scrollToBottom();
+    }
+    if (m_chart) {
+        m_chart->addData(temp);
     }
 }
