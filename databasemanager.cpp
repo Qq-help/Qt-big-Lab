@@ -56,27 +56,34 @@ bool DatabaseManager::openDb()
     return true;
 }
 
-bool DatabaseManager::insertData(double temp, double humi, int light, const QString& status)
+bool DatabaseManager::insertData(double temp, double hum, int light, const QString &status)
 {
     QSqlQuery query;
-    // 准备 SQL 插入语句
     query.prepare("INSERT INTO sensor_data (timestamp, temperature, humidity, light_lux, device_status) "
-                  "VALUES (:time, :temp, :humi, :light, :status)");
+                  "VALUES (:time, :temp, :hum, :light, :status)");
 
-    // 绑定数据 (使用当前时间)
-    // 存入格式化后的字符串，去掉 "T"
-    query.bindValue(":time", QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    QString currentTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    query.bindValue(":time", currentTime);
     query.bindValue(":temp", temp);
-    query.bindValue(":humi", humi);
+    query.bindValue(":hum", hum);
     query.bindValue(":light", light);
     query.bindValue(":status", status);
 
-    // 执行插入
-    if (!query.exec()) {
-        qDebug() << "Insert error:" << query.lastError();
-        return false;
+    bool success = query.exec();
+
+    if (success) {
+        // --- Day 8 新增：自动清理旧数据 ---
+        // 只保留 ID 最大的 100 条记录（即最新的 100 条）
+        // 这里的逻辑是：删除那些 "不在（最近100条ID列表）" 里面的所有记录
+        QSqlQuery cleanQuery;
+        cleanQuery.exec("DELETE FROM sensor_data WHERE id NOT IN "
+                        "(SELECT id FROM sensor_data ORDER BY id DESC LIMIT 100)");
+        // -------------------------------
+    } else {
+        qDebug() << "插入数据失败:" << query.lastError().text();
     }
-    return true;
+
+    return success;
 }
 
 void DatabaseManager::closeDb()
