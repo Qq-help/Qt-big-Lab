@@ -282,17 +282,11 @@ font-weight: bold;</string>
        <attribute name="title">
         <string>历史趋势</string>
        </attribute>
-       <widget class="QWidget" name="verticalLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>40</y>
-          <width>160</width>
-          <height>80</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="chartLayout"/>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QVBoxLayout" name="chartLayout"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

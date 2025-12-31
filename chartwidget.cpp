@@ -1,23 +1,29 @@
 #include "chartwidget.h"
 #include <QPainter>
 #include <QPen>
+#include <QResizeEvent>
 
 ChartWidget::ChartWidget(QWidget *parent)
     : QWidget{parent}
 {
-    // 设置背景色为白色
-    setBackgroundRole(QPalette::Base);
+    // 1. 设置背景为白色
+    QPalette pal = palette();
+    pal.setColor(QPalette::Window, Qt::white);
+    setPalette(pal);
     setAutoFillBackground(true);
+
+    // 2. 强制策略：尽可能占用空间
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void ChartWidget::addData(double value)
 {
     m_data.append(value);
-    // 如果数据太多，移除最早的，保持图表在移动
+    // 保持数据量在 MAX_POINTS 以内
     if (m_data.size() > MAX_POINTS) {
         m_data.removeFirst();
     }
-    // 触发重绘（告诉界面：该刷新了）
+    // 触发重绘
     update();
 }
 
@@ -25,51 +31,63 @@ void ChartWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿，线条更平滑
+    painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿
 
+    // 获取当前控件的真实宽高
     int w = width();
     int h = height();
-    int padding = 40; // 边距
 
-    // 1. 画坐标轴
-    painter.setPen(QPen(Qt::gray, 2));
-    painter.drawLine(padding, h - padding, w - padding, h - padding); // X轴
-    painter.drawLine(padding, padding, padding, h - padding);         // Y轴
+    // 如果窗口太小，就不画了，防止除以0报错
+    if (w <= 0 || h <= 0) return;
 
-    // 2. 画文字
-    painter.drawText(padding - 30, padding, "35°C");      // Y轴顶端
-    painter.drawText(padding - 30, h - padding, "15°C");  // Y轴底端
+    int padding = 30; // 边距
 
-    // 如果没有数据，直接返回
+    // --- 1. 画坐标轴 ---
+    painter.setPen(QPen(Qt::gray, 1));
+    // Y轴
+    painter.drawLine(padding, padding, padding, h - padding);
+    // X轴
+    painter.drawLine(padding, h - padding, w - padding, h - padding);
+
+    // --- 2. 画刻度文字 ---
+    painter.setPen(Qt::black);
+    painter.drawText(5, padding + 5, "35°C");       // 最高温
+    painter.drawText(5, h - padding + 5, "15°C");   // 最低温
+
+    // --- 3. 画折线 (核心逻辑) ---
     if (m_data.isEmpty()) return;
 
-    // 3. 画折线
-    painter.setPen(QPen(QColor("#56ab2f"), 3)); // 漂亮的绿色线条
+    painter.setPen(QPen(QColor("#56ab2f"), 3)); // 绿色线条，宽度3
 
-    // 计算每个点的间距
-    double xStep = (double)(w - 2 * padding) / (MAX_POINTS - 1);
-
-    // 简单的映射：假设温度范围是 15度 ~ 35度
-    // 实际项目中可以动态计算最大最小值
+    // 设定温度范围 (固定 15~35 度，超出这个范围会被截断)
     double minTemp = 15.0;
     double maxTemp = 35.0;
-    double range = maxTemp - minTemp;
+    double tempRange = maxTemp - minTemp;
+
+    // 计算 X 轴每个点的间距
+    // 即使数据不够 20 个，我们也按 20 个的宽度来算，这样数据会靠左显示，或者我们可以让它靠右
+    // 这里采用：固定间距，数据向左流动
+    double xStep = (double)(w - 2 * padding) / (MAX_POINTS - 1);
 
     QPointF lastPoint;
+
+    // 这里的逻辑是：让最新的数据永远在最右边
+    // startOffset 用于计算当数据不足 20 个时，从哪里开始画
+    int startOffset = MAX_POINTS - m_data.size();
 
     for (int i = 0; i < m_data.size(); ++i) {
         double val = m_data[i];
 
-        // 计算 X 坐标
-        double x = padding + i * xStep;
+        // 限制数值范围，防止画出界
+        if (val > maxTemp) val = maxTemp;
+        if (val < minTemp) val = minTemp;
 
-        // 计算 Y 坐标 (注意：屏幕坐标系 Y 轴是向下的，所以要用 h - padding 减去高度)
-        double ratio = (val - minTemp) / range;
-        // 限制一下范围，防止画出界
-        if(ratio < 0) ratio = 0;
-        if(ratio > 1) ratio = 1;
+        // 计算 X: 加上偏移量，确保最新的点在最右侧
+        double x = padding + (startOffset + i) * xStep;
 
-        double y = (h - padding) - ratio * (h - 2 * padding);
+        // 计算 Y: 注意屏幕坐标系 Y 是向下的
+        double ratio = (val - minTemp) / tempRange;
+        double y = (h - padding) - (ratio * (h - 2 * padding));
 
         QPointF currentPoint(x, y);
 
@@ -78,8 +96,8 @@ void ChartWidget::paintEvent(QPaintEvent *event)
         }
         lastPoint = currentPoint;
 
-        // 画个小圆点
+        // 画数据点
         painter.setBrush(Qt::white);
-        painter.drawEllipse(currentPoint, 4, 4);
+        painter.drawEllipse(currentPoint, 3, 3);
     }
 }
