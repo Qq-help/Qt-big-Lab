@@ -87,6 +87,29 @@ int main(int argc, char *argv[])
             padding: 5px;
             font-weight: bold;
         }
+ /* --- Day 6 新增：天气区域专属样式 --- */
+
+        /* 城市名称：使用低调的灰色 */
+        QLabel#lblCity {
+            color: #7f8c8d;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        /* 天气状况（如晴/雨）：使用你按钮同款的深绿色 */
+        QLabel#lblWeatherDesc {
+            color: #56ab2f;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        /* 室外气温：使用橙色，与室内蓝色的区分开 */
+        QLabel#lblWeatherTemp {
+            color: #e67e22;
+            font-size: 18px;
+            font-weight: bold;
+            font-family: "Arial";
+        }
     )";
     a.setStyleSheet(qss);
 
