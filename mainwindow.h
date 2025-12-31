@@ -4,6 +4,7 @@
 #include <QSqlTableModel>
 #include <QMainWindow>
 #include "workerthread.h"
+#include "weathermanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,6 +27,7 @@ private:
     Ui::MainWindow *ui;
     QSqlTableModel *m_model;
     WorkerThread *m_worker;
+    WeatherManager *m_weather;
 
 };
 #endif // MAINWINDOW_H

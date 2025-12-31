@@ -76,6 +76,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_worker->start();
 
     // --- Day 5 新增代码结束 ---
+    // --- Day 6 测试代码 ---
+    m_weather = new WeatherManager(this);
+    m_weather->fetchWeather("北京"); // 参数暂时没用到，先随便传
+    // --------------------
 }
 
 MainWindow::~MainWindow()
