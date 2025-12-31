@@ -12,11 +12,13 @@ SOURCES += \
     databasemanager.cpp \
     main.cpp \
     mainwindow.cpp \
+    weathermanager.cpp \
     workerthread.cpp
 
 HEADERS += \
     databasemanager.h \
     mainwindow.h \
+    weathermanager.h \
     workerthread.h
 
 FORMS += \
