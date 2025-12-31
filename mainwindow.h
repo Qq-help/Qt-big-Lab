@@ -3,6 +3,7 @@
 
 #include <QSqlTableModel>
 #include <QMainWindow>
+#include "workerthread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,8 +19,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void updateSensorData(double temp, double hum, int light, QString status);
+
 private:
     Ui::MainWindow *ui;
     QSqlTableModel *m_model;
+    WorkerThread *m_worker;
+
 };
 #endif // MAINWINDOW_H

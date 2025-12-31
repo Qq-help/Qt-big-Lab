@@ -2,6 +2,7 @@
 #include "databasemanager.h"
 #include "ui_mainwindow.h"
 #include <QHeaderView>
+#include "databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -62,9 +63,48 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableView->setAlternatingRowColors(true);
+
+    // --- Day 5 新增代码开始 ---
+
+    // 1. 创建线程对象
+    m_worker = new WorkerThread(this);
+
+    // 2. 连接信号与槽：线程产生数据 -> 主窗口更新界面
+    connect(m_worker, &WorkerThread::dataGenerated, this, &MainWindow::updateSensorData);
+
+    // 3. 启动线程
+    m_worker->start();
+
+    // --- Day 5 新增代码结束 ---
 }
 
 MainWindow::~MainWindow()
 {
+    // 停止并等待线程结束
+    if (m_worker->isRunning()) {
+        m_worker->stop();
+        m_worker->quit();
+        m_worker->wait();
+    }
     delete ui;
+}
+
+void MainWindow::updateSensorData(double temp, double hum, int light, QString status)
+{
+    // 1. 更新 UI 顶部的实时数据显示 (使用你提供的 objectName)
+    ui->labelTemp->setText(QString("温度: %1 °C").arg(temp, 0, 'f', 1)); // 保留1位小数
+    ui->labelHum->setText(QString("湿度: %1 %").arg(hum, 0, 'f', 1));   // 保留1位小数
+
+    // (可选) 如果你有光照 Label，也可以在这里更新，例如: ui->labelLight->setText(...)
+
+    // 2. 写入数据库 (调用单例)
+    DatabaseManager::instance().insertData(temp, hum, light, status);
+
+    // 3. 刷新底部表格视图，显示最新插入的数据
+    if (m_model) {
+        m_model->select(); // 重新查询数据库
+
+        // 4. 自动滚动到最后一行，方便查看最新状态
+        ui->tableView->scrollToBottom();
+    }
 }

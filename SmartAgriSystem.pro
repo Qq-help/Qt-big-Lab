@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     databasemanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    workerthread.cpp
 
 HEADERS += \
     databasemanager.h \
-    mainwindow.h
+    mainwindow.h \
+    workerthread.h
 
 FORMS += \
     mainwindow.ui
