@@ -195,7 +195,7 @@ font-weight: bold;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: blue;
+            <string notr="true">color: green;
 font-weight: bold;</string>
            </property>
            <property name="text">

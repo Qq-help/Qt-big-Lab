@@ -10,16 +10,16 @@ class ChartWidget : public QWidget
 public:
     explicit ChartWidget(QWidget *parent = nullptr);
 
-    // 添加数据的方法
-    void addData(double value);
+    // 修改：同时接收温度和湿度
+    void addData(double temp, double hum);
 
 protected:
-    // 重写绘图事件（核心）
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    QList<double> m_data; // 存储最近的温度数据
-    const int MAX_POINTS = 20; // 最多显示多少个点
+    QList<double> m_tempData; // 温度数据
+    QList<double> m_humData;  // 湿度数据
+    const int MAX_POINTS = 20;
 };
 
-#endif // CHARTWIDGET_H
+#endif

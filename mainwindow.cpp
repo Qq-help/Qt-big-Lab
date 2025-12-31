@@ -138,7 +138,7 @@ void MainWindow::updateSensorData(double temp, double hum, int light, QString st
         ui->tableView->scrollToBottom();
     }
     if (m_chart) {
-        m_chart->addData(temp);
+        m_chart->addData(temp,hum);
     }
 }
 
