@@ -24,6 +24,8 @@ public:
 private slots:
     void updateSensorData(double temp, double hum, int light, QString status);
 
+    void on_btnClear_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlTableModel *m_model;

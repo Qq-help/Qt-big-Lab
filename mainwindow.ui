@@ -266,7 +266,7 @@ font-weight: bold;</string>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -275,6 +275,16 @@ font-weight: bold;</string>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QTableView" name="tableView"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnClear">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string>清空历史记录</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

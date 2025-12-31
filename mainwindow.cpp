@@ -2,6 +2,8 @@
 #include "databasemanager.h"
 #include "ui_mainwindow.h"
 #include <QHeaderView>
+#include <QMessageBox>
+#include <QSqlQuery>
 #include "databasemanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -137,5 +139,28 @@ void MainWindow::updateSensorData(double temp, double hum, int light, QString st
     }
     if (m_chart) {
         m_chart->addData(temp);
+    }
+}
+
+void MainWindow::on_btnClear_clicked()
+{
+    // 1. 弹出确认框 (二次确认)
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "确认操作",
+                                  "确定要清空所有历史数据吗？\n此操作不可恢复！",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        // 2. 执行删除
+        QSqlQuery query;
+        if (query.exec("DELETE FROM sensor_data")) {
+            // 3. 成功后刷新表格
+            m_model->select();
+
+            // 提示用户
+            QMessageBox::information(this, "成功", "历史记录已全部清空！");
+        } else {
+            QMessageBox::warning(this, "错误", "清空失败：" + query.lastError().text());
+        }
     }
 }
